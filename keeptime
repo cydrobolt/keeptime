@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import schedule, time, os, sys
+from gtts import gTTS
+from pydub import AudioSegment
+from pydub.playback import play
+from tempfile import mkstemp
+
+try:
+    lang_code = sys.argv[1]
+except IndexError:
+    # Default to English
+    lang_code = 'en'
+
+lang_templates = {
+    'en': 'It is %I %M %p',
+    'fr': 'C\'est %H heures %M',
+    'zh': '现在是%I点%M %p',
+    'es': 'Son las %I %M %p',
+    'ru': 'Время сейчас %I %M %p',
+    'de': 'Es ist %I Uhr %M %p'
+}
+
+print 'Running keeptime in {}'.format(lang_code)
+
+def get_time_string(time_template):
+    return time.strftime(time_template)
+
+def say_text(text, language):
+    # Fetch sound file and play
+    tts = gTTS(text=text, lang=language)
+    tf_desc, tf_path = mkstemp()
+    with open(tf_path, 'w') as tf_handle:
+        tts.write_to_fp(tf_handle)
+
+    audio = AudioSegment.from_mp3(tf_path)
+    play(audio)
+    # Clean up file
+    os.close(tf_desc)
+    os.remove(tf_path)
+
+def say_time():
+    # Say time
+    say_text(
+        get_time_string(get_time_string(lang_templates[lang_code])),
+        lang_code
+    )
+
+# Say time at every half-hour mark
+schedule.every().hour.at(':30').do(say_time)
+schedule.every().hour.at(':00').do(say_time)
+
+while True:
+    schedule.run_pending()
+    time.sleep(10)
