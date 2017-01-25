@@ -5,4 +5,4 @@ Terminal=false
 Type=Application
 Name=keeptime
 Icon=gtimelog
-Exec=~/.local/share/keeptime/keeptime
+Exec=/home/<USER_NAME>/.local/share/keeptime/keeptime
