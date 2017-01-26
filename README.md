@@ -2,6 +2,19 @@
 Keep tabs on the time by hearing the time spoken.
 keeptime is a lightweight tool to help reduce procrastination.
 
+```
+usage: ./keeptime [-h] [-d] [-l LANG]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d, --daemon          run keeptime as a daemon
+  -l LANG, --lang LANG  two-letter language code for localization
+```
+
+
+Example: `./keeptime -d -l en`
+
+
 ### Running keeptime
  - Clone the repository
  - Install dependencies (`pip install -r requirements.txt`)
