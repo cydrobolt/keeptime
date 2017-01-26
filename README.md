@@ -3,7 +3,7 @@ Keep tabs on the time by hearing the time spoken.
 keeptime is a lightweight tool to help reduce procrastination.
 
 ```
-usage: keeptime [-h] [-d] [-l LANG] [-q]
+usage: ./keeptime [-h] [-d] [-l LANG] [-q]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -21,7 +21,7 @@ By default, keeptime announces the time every 30 minutes. However, you can incre
  - Clone the repository
  - Install dependencies (`pip install -r requirements.txt`)
  - Ensure `ffmpeg` or `libav` is installed
- - Run `./keeptime <lang_code>` (e.g `./keeptime en`)
+ - Run `./keeptime -l <lang_code>` (e.g `./keeptime -l en`)
  - Add an auto start entry (e.g in GNOME) to start keeptime on boot
 
 ### Running keeptime on startup
