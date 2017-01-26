@@ -2,16 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import schedule, time, os, sys
+import argparse
 from gtts import gTTS
 from pydub import AudioSegment
 from pydub.playback import play
 from tempfile import mkstemp
+from daemonize import Daemonize
 
-try:
-    lang_code = sys.argv[1]
-except IndexError:
-    # Default to English
-    lang_code = 'en'
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument('-d', '--daemon', help='run keeptime as a daemon', action='store_true')
+arg_parser.add_argument('-l', '--lang', help='two-letter language code for localization')
+args = arg_parser.parse_args()
 
 lang_templates = {
     'en': 'It is %I %M %p',
@@ -21,6 +22,14 @@ lang_templates = {
     'ru': 'Время сейчас %I %M %p',
     'de': 'Es ist %I Uhr %M %p'
 }
+
+lang_code = 'en'
+
+if args.lang:
+    lang_code = args.lang
+    if lang_code not in lang_templates:
+        print 'Invalid language code provided.'
+        sys.exit()
 
 print 'Running keeptime in {}'.format(lang_code)
 
@@ -51,6 +60,14 @@ def say_time():
 schedule.every().hour.at(':30').do(say_time)
 schedule.every().hour.at(':00').do(say_time)
 
-while True:
-    schedule.run_pending()
-    time.sleep(10)
+def main():
+    while True:
+        schedule.run_pending()
+        time.sleep(10)
+
+if args.daemon:
+    daemon_pid = '/tmp/keeptime.pid'
+    daemon = Daemonize(app="keeptime", pid=daemon_pid, action=main)
+    daemon.start()
+else:
+    main()
