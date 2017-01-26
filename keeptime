@@ -12,6 +12,8 @@ from daemonize import Daemonize
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('-d', '--daemon', help='run keeptime as a daemon', action='store_true')
 arg_parser.add_argument('-l', '--lang', help='two-letter language code for localization')
+arg_parser.add_argument('-q', '--quarter', help='say time every quarter hour', action='store_true')
+
 args = arg_parser.parse_args()
 
 lang_templates = {
@@ -56,9 +58,15 @@ def say_time():
         lang_code
     )
 
+if args.quarter:
+    # Say time at every quarter hour
+    schedule.every().hour.at(':45').do(say_time)
+    schedule.every().hour.at(':15').do(say_time)
+
 # Say time at every half-hour mark
 schedule.every().hour.at(':30').do(say_time)
 schedule.every().hour.at(':00').do(say_time)
+
 
 def main():
     while True:

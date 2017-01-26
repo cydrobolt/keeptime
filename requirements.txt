@@ -1,4 +1,5 @@
 appdirs==1.4.0
+daemonize==2.4.7
 gTTS==1.1.8
 gTTS-token==1.1.1
 packaging==16.8
